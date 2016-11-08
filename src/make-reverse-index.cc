@@ -122,6 +122,7 @@ int main(int argc, char *argv[])
     load_segmenter("./qsegconf.ini", &segmenter);
     
     string line;
+    ofstream output(arguments.index_file);
     while (getline(input, line)) {
         string btag, category, title;
         try {
@@ -141,8 +142,8 @@ int main(int argc, char *argv[])
 
         vector<string> title_seg_vec;
         segment(segmenter, title, title_seg_vec);
-        
-        cout << category << "\t";
+
+        output << category << "\t";
         bool first_flag = true;
         for (vector<string>::const_iterator iter = word_vec.begin(); iter != word_vec.end(); ++iter) {
             bool is_seg = false;
@@ -157,11 +158,11 @@ int main(int argc, char *argv[])
             if (first_flag) {
                 first_flag = false;
             } else {
-                cout << " ";
+                output << " ";
             }
-            cout << *iter;
+            output << *iter;
         }
-        cout << endl;
+        output << endl;
     }
 
     regex_free(&category_regex);
