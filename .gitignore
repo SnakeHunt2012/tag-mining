@@ -1,0 +1,6 @@
+make-reverse-index
+*.o
+*.txt
+*.tsv
+*.bin
+*.log
