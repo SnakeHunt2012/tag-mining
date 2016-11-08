@@ -140,9 +140,19 @@ int main(int argc, char *argv[])
         if (word_vec.size() == 0)
             continue;
 
+        // debug
+        //cout << title << "\t";
+        //for (vector<string>::const_iterator iter = word_vec.begin(); iter != word_vec.end(); ++iter)
+        //    cout << " " << *iter;
+        //cout << "\t";
+
         vector<string> title_seg_vec;
         segment(segmenter, title, title_seg_vec);
 
+        //for (vector<string>::const_iterator iter = title_seg_vec.begin(); iter != title_seg_vec.end(); ++iter)
+        //    cout << " " << *iter;
+        //cout << endl;
+        
         output << category << "\t";
         bool first_flag = true;
         for (vector<string>::const_iterator iter = word_vec.begin(); iter != word_vec.end(); ++iter) {
@@ -153,7 +163,7 @@ int main(int argc, char *argv[])
                     break;
                 }
             if (!is_seg)
-                break;
+                continue;
             
             if (first_flag) {
                 first_flag = false;
