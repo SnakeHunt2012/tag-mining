@@ -19,7 +19,7 @@ const char *argp_program_version = "make-reverse-index 0.1";
 const char *argp_program_bug_address = "<SnakeHunt2012@gmail.com>";
 
 static char prog_doc[] = "Make reverse index (url->[tag ...]) using fasttrie."; /* Program documentation. */
-static char args_doc[] = "TREE_FILE URL_TITLE_FILE INDEX_FILE"; /* A description of the arguments we accept. */
+static char args_doc[] = "TREE_FILE"; /* A description of the arguments we accept. */
 
 /* Keys for options without short-options. */
 #define OPT_DEBUG       1
@@ -44,7 +44,7 @@ static struct argp_option options[] = {
 /* Used by main to communicate with parse_opt. */
 struct arguments
 {
-    char *tree_file, *url_title_file, *index_file, *output_file;
+    char *tree_file, *output_file;
     bool verbose, silent, debug, profile;
 };
 
@@ -72,13 +72,11 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
             
         case ARGP_KEY_ARG:
             if (state->arg_num == 0) arguments->tree_file = arg;
-            if (state->arg_num == 1) arguments->url_title_file = arg;
-            if (state->arg_num == 2) arguments->index_file = arg;
-            if (state->arg_num >= 3) argp_usage(state);
+            if (state->arg_num >= 1) argp_usage(state);
             break;
             
         case ARGP_KEY_END:
-            if (state->arg_num < 3) argp_usage(state);
+            if (state->arg_num < 1) argp_usage(state);
             break;
             
         case ARGP_KEY_NO_ARGS:
@@ -101,8 +99,6 @@ int main(int argc, char *argv[])
 {
     struct arguments arguments;
     arguments.tree_file = NULL;
-    arguments.url_title_file = NULL;
-    arguments.index_file = NULL;
     arguments.output_file = NULL;
     arguments.verbose = true;
     arguments.silent = false;
@@ -111,8 +107,6 @@ int main(int argc, char *argv[])
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     
-    ifstream input(arguments.url_title_file);
-
     Container<Trie<String, int> > trie_tree = Container<Trie<String, int> > (arguments.tree_file);
     
     regex_t record_regex = compile_regex("^(.*)\t(.*)$");
@@ -122,8 +116,7 @@ int main(int argc, char *argv[])
     load_segmenter("./qsegconf.ini", &segmenter);
     
     string line;
-    ofstream output(arguments.index_file);
-    while (getline(input, line)) {
+    while (getline(cin, line)) {
         string btag, category, title;
         try {
             btag = regex_search(&record_regex, 1, line);
@@ -153,7 +146,7 @@ int main(int argc, char *argv[])
         //    cout << " " << *iter;
         //cout << endl;
         
-        output << category << "\t";
+        cout << category << "\t";
         bool first_flag = true;
         for (vector<string>::const_iterator iter = word_vec.begin(); iter != word_vec.end(); ++iter) {
             bool is_seg = false;
@@ -168,11 +161,11 @@ int main(int argc, char *argv[])
             if (first_flag) {
                 first_flag = false;
             } else {
-                output << " ";
+                cout << " ";
             }
-            output << *iter;
+            cout << *iter;
         }
-        output << endl;
+        cout << endl;
     }
 
     regex_free(&category_regex);
