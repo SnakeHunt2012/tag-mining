@@ -34,5 +34,8 @@ all: make-reverse-index
 make-reverse-index: make-reverse-index.o $(OBJS)
 	$(CXX) $(CXXFLAGS) $< ${OBJS} -o $(BINDIR)/$@ ${LIBS}
 
+segment: segment.o $(OBJS)
+	$(CXX) $(CXXFLAGS) $< ${OBJS} -o $(BINDIR)/$@ ${LIBS}
+
 clean:
 	rm -f make-reverse-index *.o  *~ /cores/core.* core *.core *.a
