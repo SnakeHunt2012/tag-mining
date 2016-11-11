@@ -1,4 +1,5 @@
 make-reverse-index
+segment
 *.o
 *.txt
 *.tsv
