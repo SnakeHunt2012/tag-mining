@@ -64,7 +64,8 @@ then
 fi
 
 shive -e "select query, pv from ${query_pv_table} where ds='${DATE}';" > query-pv.tsv
-python segment.py query-pv.tsv seg-pv.tsv
+#python segment.py query-pv.tsv seg-pv.tsv
+./segment query-pv.tsv seg-pv.tsv
 
 shadoop fs -test -e "${query_pv_dir}/ds=${DATE}"
 if [ $? -eq 0 ]
@@ -77,7 +78,7 @@ shadoop fs -put seg-pv.tsv "${query_pv_dir}/${DATE}"
 cd NewWordDiscov && bash run_nw_discov.sh "${DATE}" && cd ../
 assert_status "Write into table nw_word_pair_join_entropy."
 
-shive -e "select word, co_word from nw_word_pair_join_entropy where ds='${DATE}' and (adhesion > 5000 and lentropy > 0.9) or (adhesion > 300000); "  | awk -F '\t' '{print $1 $2}' > double-query.tsv
+shive -e "select word, co_word from nw_word_pair_join_entropy where ds='${DATE}'; "  | awk -F '\t' '{print $1 $2}' > double-query.tsv
 assert_status "Dump double-query.tsv from table nw_word_pair_join_entropy"
 
 awk '{if (NF == 2) {print $1}}' seg-pv.tsv > single-query.tsv
