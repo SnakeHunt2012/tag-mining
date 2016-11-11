@@ -30,7 +30,7 @@ def main():
             category_score_list.sort(reverse = True)
             if len(category_score_list) == 0:
                 continue
-            if category_score_list[0][0] < 3:
+            if category_score_list[0][0] <= 3:
                 continue
             #if float(category_score_list[0][0]) / count_sum < 0.5:
             #    if len(category_score_list) >= 2 and category_score_list[1][0] >= 3 and float(category_score_list[0][0] + category_score_list[1][0]) / count_sum > 0.8:
@@ -38,8 +38,8 @@ def main():
             #    continue
             #print tag, category_score_list[0][1].encode("utf-8")
             
-            if float(category_score_list[0][0]) / count_sum < 0.65:
-                if len(category_score_list) >= 2 and category_score_list[1][0] >= 3 and float(category_score_list[0][0] + category_score_list[1][0]) / count_sum > 0.9:
+            if float(category_score_list[0][0]) / count_sum < 0.8:
+                if len(category_score_list) >= 2 and category_score_list[1][0] > 3 and float(category_score_list[0][0] + category_score_list[1][0]) / count_sum > 0.9:
                     print "%s\t%s" % (category_score_list[0][1].encode("utf-8"), tag)
                     print "%s\t%s" % (category_score_list[1][1].encode("utf-8"), tag)
                 continue
