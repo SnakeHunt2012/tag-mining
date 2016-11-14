@@ -75,7 +75,7 @@ fi
 shadoop fs -mkdir "${query_pv_dir}/ds=${DATE}"
 shadoop fs -put seg-pv.tsv "${query_pv_dir}/${DATE}"
 
-cd NewWordDiscov && bash run_nw_discov.sh "${DATE}" && cd ../
+cd NewWordDiscov && bash create_query_click_title_seg.sh "${DATE}" && bash run_nw_discov.sh "${DATE}" && cd ../
 assert_status "Write into table nw_word_pair_join_entropy."
 
 shive -e "select word, co_word from nw_word_pair_join_entropy where ds='${DATE}'; "  | awk -F '\t' '{print $1 $2}' > double-query.tsv
@@ -124,7 +124,7 @@ assert_status "Make forward-index.tsv."
 condition="-e forward-index.tsv"
 assert_condition "${condition}" ${LINENO}
 
-python select-tag.py forward-index.tsv > tag-category.tsv
+python select-tag.py forward-index.tsv > "tag-category-${DATE}.tsv"
 assert_status "Select tags from forward-index.tsv."
 condition="-e tag-category.tsv"
 assert_condition "${condition}" ${LINENO}
