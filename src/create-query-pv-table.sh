@@ -17,6 +17,8 @@ case "$1" in
     *                     ) usage; exit ${err_args};;
 esac
 
+SDATE=$(/bin/date -d "${DATE} 30 days ago" +%Y-%m-%d)
+
 echo "
 create external table if not exists ${query_pv_table} (
 query string,
@@ -32,7 +34,7 @@ alter table ${query_pv_table} drop if exists partition(ds='${DATE}');
 insert overwrite table ${query_pv_table} partition(ds='$DATE')
 select t1.query, t1.pv
 from (
-    select query, count(*) as pv from nw_query_click_title_seg group by query
+    select query, count(*) as pv from nw_query_click_title_seg where ds > '${SDATE}' group by query
 ) t1
 where t1.pv > 5;
 " | sudo -u $GROUP -E $HIVE_HOME/bin/hive > ./hive.log
