@@ -73,7 +73,7 @@ then
     shadoop fs -rmr "${query_pv_dir}/ds=${DATE}"
 fi
 shadoop fs -mkdir "${query_pv_dir}/ds=${DATE}"
-shadoop fs -put seg-pv.tsv "${query_pv_dir}/${DATE}"
+shadoop fs -put seg-pv.tsv "${query_pv_dir}/ds=${DATE}"
 
 cd NewWordDiscov && bash create_query_click_title_seg.sh "${DATE}" && bash run_nw_discov.sh "${DATE}" && cd ../
 assert_status "Write into table nw_word_pair_join_entropy."
