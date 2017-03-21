@@ -78,7 +78,7 @@ shadoop fs -put seg-pv.tsv "${query_pv_dir}/ds=${DATE}"
 cd NewWordDiscov && bash create_query_click_title_seg.sh "${DATE}" && bash run_nw_discov.sh "${DATE}" && cd ../
 assert_status "Write into table nw_word_pair_join_entropy."
 
-shive -e "select word, co_word from nw_word_pair_join_entropy where ds='${DATE}'; "  | awk -F '\t' '{print $1 $2}' > double-query.tsv
+shive -e "select word, co_word from nw_word_pair_join_entropy where ds='${DATE}' and adhesion <= 10000; "  | awk -F '\t' '{print $1 $2}' > double-query.tsv
 assert_status "Dump double-query.tsv from table nw_word_pair_join_entropy"
 
 awk '{if (NF == 2) {print $1}}' seg-pv.tsv > single-query.tsv
